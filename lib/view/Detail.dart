@@ -2,35 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:memo_app/repository/db/MemoDao.dart';
 
 class Detail extends StatelessWidget{
-  Detail({Key key}): super(key: key);
+
+  /** タイトル */
+  final String title;
+
+  /** 画面タイトル */
+  static const appBarTitle = "メモ本文表示";
+
+  /** コンストラクタ */
+  Detail({Key key, this.title}): super(key: key);
+
+  /**
+   * ウィジェットの生成
+   * @param context ビルドコンテキスト
+   * @return ウィジェット
+   */
   @override
   Widget build(BuildContext context) {
+
+    // データの引継ぎ
     final Memo args = ModalRoute.of(context).settings.arguments;
+
+    // 画面サイズ測定
+    final Size size = MediaQuery.of(context).size;
+
+    // コントローラのインスタンス生成
     final titleController = TextEditingController(text:args.toMap()['title']);
     final textController = TextEditingController(text:args.toMap()['text']);
-    final Size size = MediaQuery.of(context).size;
+
     MemoDao memoDao = new MemoDao();
+
+    // メモ詳細表示ウィジェットを呼び出し元へ返却
     return MaterialApp(
       home: Scaffold(
+
+        // アプリバー
         appBar: AppBar(
           leading:Container(
+
+            // 戻るボタンの追加
             alignment: FractionalOffset.centerLeft,
             child: OverflowBox(
               maxWidth: 100.0,
               child: FlatButton(
                 onPressed: (){
-                  String trimTitle = titleController.text.trimRight();
-                  String trimText = textController.text.trimRight();
-                  if (trimTitle.length != 0 || trimText.length != 0) {
-                    memoDao.update(
-                        Memo(
-                          id: args.toMap()['id'],
-                          title: trimTitle,
-                          text: trimText,
-                          priority: args.toMap()['priority'],
-                        )
-                    );
-                  }
                   Navigator.of(context).pushNamed('/top');
                 },
                 child: Text(
@@ -42,17 +57,23 @@ class Detail extends StatelessWidget{
               ),
             ),
           ),
+
+          // 画面タイトル表示
           centerTitle: true,
-          backgroundColor: Colors.greenAccent,
+          backgroundColor: Colors.lightGreenAccent,
           title: new Text(
-            "詳細",
+            appBarTitle,
             style: TextStyle(
               color: Colors.black,
             ),
           ),
         ),
+
+        // メイン部
         body: Column(
           children: <Widget>[
+
+            // タイトル部
             Container(
               decoration: BoxDecoration(
                 border: new Border(
@@ -73,10 +94,11 @@ class Detail extends StatelessWidget{
                 ),
               ),
             ),
+
+            // 本文部
             GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed('/update', arguments: args);
-                print('updateへ');
+                Navigator.of(context).pushReplacementNamed('/update', arguments: args);
               },
               child: Container(
                 padding: EdgeInsets.only(top:10.0),

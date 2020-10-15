@@ -13,8 +13,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      //home: TopPage(title: 'Memo', db: db),
-      home: TopPage(title: '一覧', ),
+
+      home: TopPage(title: 'メモ一覧'),
       routes: <String, WidgetBuilder> {
         '/top': (BuildContext context) => new TopPage(),
         '/registration': (BuildContext context) => new Registration(),
